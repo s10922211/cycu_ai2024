@@ -47,3 +47,4 @@ plt.xlabel('日期')
 plt.ylabel('油價')
 plt.title('油價變化趨勢')
 plt.show()
+# 顯示圖片
