@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import matplotlib.font_manager as fm
 
 # 抓取網頁內容
 url = "https://vipmbr.cpc.com.tw/mbwebs/ShowHistoryPrice_oil.aspx"
@@ -21,30 +20,37 @@ print(df1)
 print(df2)
 
 #將Dataframe 輸出到 CSV
-df2.to_csv(r'C:\Users\Ethan\Desktop\cycu_ai2024\20240305\oil.csv', index=False, encoding='utf-8-sig')
+df2.to_csv('oil.csv', index=False, encoding='utf-8-sig')
 
-
-# df2 只保留前兩個欄位的資料
+#df2 只保留前五個欄位資料
 df2 = df2.iloc[:, :5]
 
-# 去除第二欄值是NaN的資料
-df2 = df2.dropna(subset=[df2.columns[1]])
 
-# 把第一欄的資料型態 轉成 datatime
-df2[df2.columns[0]] = pd.to_datetime(df2[df2.columns[0]])
-print(df2)
+# 去除包含 NaN 值的行
+df2 = df2.dropna()
 
-# 使用 matplotlib 繪製折線圖，x 軸為日期，y 軸為油價
+# 或者填充 NaN 值
+df2 = df2.fillna(0)
+
+# 繪製折線圖
 import matplotlib.pyplot as plt
-plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
-font = fm.FontProperties(fname='msyh.ttf')
-plt.plot(df2[df2.columns[0]], df2[df2.columns[1]], label='92無鉛汽油')
-plt.plot(df2[df2.columns[0]], df2[df2.columns[2]], label='95無鉛汽油')
-plt.plot(df2[df2.columns[0]], df2[df2.columns[3]], label='98無鉛汽油')
-plt.plot(df2[df2.columns[0]], df2[df2.columns[4]], label='超級柴油', linestyle='solid')
-plt.legend(loc='upper right')
+plt.figure(figsize=(10, 6))
+
+# 繪製折線
+plt.plot(df2[df2.columns[0]], df2[df2.columns[1]], label=df2.columns[1])
+plt.plot(df2[df2.columns[0]], df2[df2.columns[2]], label=df2.columns[2])
+plt.plot(df2[df2.columns[0]], df2[df2.columns[3]], label=df2.columns[3])
+plt.plot(df2[df2.columns[0]], df2[df2.columns[4]], label=df2.columns[4])
+
 plt.xlabel('日期')
-plt.ylabel('油價')
-plt.title('油價變化趨勢')
+plt.ylabel('價格')
+plt.title('價格趨勢圖')
+plt.legend()  # 顯示圖例
+
+# 翻轉 x 軸的座標
+plt.gca().invert_xaxis()
+
+# 設定中文字型
+plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']  # 設定中文字型為微軟正黑體
+
 plt.show()
-# 顯示圖片
