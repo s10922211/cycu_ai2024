@@ -17,9 +17,12 @@ filepath = os.path.join(path ,excel_file)
 # 讀取 Excel 文件
 df = pd.read_excel(filepath, sheet_name='交通事故簡報通報資料')
 
-#篩選 欄位名稱 為'國道名稱' 的資料， 我只要名稱為'國道1號'的資料，且欄位名稱為'方向'的資料，我只要名稱為'南'的資料
-df = df[df['方向'] == '南']
-df1 = df[df['國道名稱'] == '國道3號']
+#篩選 欄位名稱 為'國道名稱' 的資料， 我只要名稱為'國道1號'的資料
+#篩選 欄位名稱為'方向'的資料，我要名稱為'南'的資料跟'南下'的資料
+
+# 篩選出 '國道名稱' 為 '國道1號' 且 '方向' 為 '南' 或 '南下' 的資料
+df1 = df[(df['國道名稱'] == '國道3號') & (df['方向'] == '北') | (df['方向'] == '北向')]
+
 
 
 #把 欄位 '年' '月' '日' '時' '分'
@@ -56,6 +59,6 @@ for index, row in df1.iterrows():
 
 plt.xlabel('事件時間')
 plt.ylabel('里程')
-plt.title('國道3號南 10922211')
+plt.title('國道3號北 10922211')
 plt.rcParams['font.sans-serif'] = ['Microsoft JhengHei']
 plt.show()
